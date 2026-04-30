@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 
 const Sidebar = () => {
   return (
@@ -5,13 +6,25 @@ const Sidebar = () => {
       <div className="text-xl font-bold mb-5">Job Tracker</div>
 
       <nav className="space-y-2">
-        <div className="p-2 rounded cursor-pointer hover:bg-blue-800">
+        <Link
+          to="/" 
+          activeProps={{
+            className: "bg-blue-700"
+          }}
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800"
+        >
           Dashboard
-        </div>
+        </Link>
 
-        <div className="p-2 rounded cursor-pointer hover:bg-blue-800">
+        <Link 
+          to="/applications"
+          activeProps={{
+            className: "bg-blue-700"
+          }}
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800"
+        >
           Applications
-        </div>
+        </Link>
       </nav>
     </div>
   )
