@@ -16,10 +16,15 @@ usersRouter.post("/register", async (req, res) => {
   
   try {
     const hash = await bcrypt.hash(password, saltRounds);
-    const [result] = await pool.query(sql, [email, hash]);
+    await pool.query(sql, [email, hash]);
     return res.status(201).json({ registered: true });
-  } catch (error) {
-     console.error(error);
+  } catch (error: any) {
+    console.error(error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
     return res.status(500).json({ error: "Internal server error" });
   }
 })
