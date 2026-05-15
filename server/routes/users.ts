@@ -1,6 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import pool from "../config/database";
+import { RowDataPacket } from "mysql2";
 
 const usersRouter = Router();
 const saltRounds = 10;
@@ -26,6 +27,42 @@ usersRouter.post("/register", async (req, res) => {
     }
 
     return res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+usersRouter.post("/login", async (req, res) => {
+  const sql = "SELECT * FROM users WHERE email = ?";
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+
+  try {
+    const [result] = await pool.query<RowDataPacket[]>(sql, [email]);
+    const user = result[0];
+    
+    if (user) {
+      const match = await bcrypt.compare(password, user.hashed_password);
+
+      if (match) {
+        const userId = user.id;
+
+        return res.status(200).json({
+          success: true,
+          login: true,
+          message: "Login Successful!",
+          email,
+          userId,
+        });
+      } else {
+        return res.status(401).json({ success: false, message: "Incorrect password" });
+      }
+    }   else {
+      return res.status(401).json({ success: false, message: "Invalid Email" });
+    }
+  } catch {
+    return res.status(500).json({ message: "Internal server error" });
   }
 })
 
