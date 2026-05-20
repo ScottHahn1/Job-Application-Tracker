@@ -25,6 +25,16 @@ const Sidebar = () => {
         >
           Applications
         </Link>
+
+         <Link 
+          to="/register"
+          activeProps={{
+            className: "bg-blue-700"
+          }}
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800"
+        >
+          Register
+        </Link>
       </nav>
     </div>
   )
