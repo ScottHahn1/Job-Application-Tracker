@@ -24,6 +24,7 @@ function Login() {
     mutationFn: async ({ email, password }: PostVariables) => {
       const response = await fetch("http://localhost:8888/api/users/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
