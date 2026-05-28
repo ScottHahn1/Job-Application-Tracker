@@ -1,7 +1,9 @@
-import { Router } from "express";
+import { Response, Router } from "express";
 import bcrypt from "bcrypt";
 import pool from "../config/database";
 import { RowDataPacket } from "mysql2";
+import jwt from "jsonwebtoken";
+import authenticateToken, { CustomRequest } from "../middlewares/authToken";
 
 const usersRouter = Router();
 const saltRounds = 10;
@@ -47,6 +49,33 @@ usersRouter.post("/login", async (req, res) => {
 
       if (match) {
         const userId = user.id;
+
+        const accessToken = jwt.sign(
+          { userId }, 
+          process.env.ACCESS_TOKEN_SECRET as string, 
+          { expiresIn: "15m" }
+        );
+        const refreshToken = jwt.sign(
+          { userId }, 
+          process.env.REFRESH_TOKEN_SECRET as string, 
+          { expiresIn: "7d" }
+        );
+
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          maxAge: 15 * 60 * 1000
+        })
+
+        res.cookie("refreshToken", refreshToken,
+          {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+          }
+        );
 
         return res.status(200).json({
           success: true,
