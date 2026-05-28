@@ -95,4 +95,26 @@ usersRouter.post("/login", async (req, res) => {
   }
 })
 
+usersRouter.get("/me", authenticateToken, async (req: CustomRequest, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Authentication required." });
+  }
+
+  const sql = "SELECT email, id FROM users WHERE id = ?";
+  const { userId } = req.user;
+
+  try {
+    const [rows] = await pool.query<RowDataPacket[]>(sql, [userId]);
+
+    if (rows?.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(rows[0]);
+  } catch (err) {
+    console.log(`Auth error:  ${err}`);
+    res.status(500).json({ error: "Internal server error!" });
+  }
+})
+
 export default usersRouter;
