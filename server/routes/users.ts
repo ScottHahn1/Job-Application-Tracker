@@ -117,4 +117,33 @@ usersRouter.get("/me", authenticateToken, async (req: CustomRequest, res: Respon
   }
 })
 
+usersRouter.post("/refresh-token", (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "No refresh token provided." });
+  }
+
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string, (err: any, user: any) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid refresh token." });
+    }
+
+    const newAccessToken = jwt.sign(
+      { userId: user.id },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    return res.json({ message: "New access token issued" });
+  })
+})
+
 export default usersRouter;
