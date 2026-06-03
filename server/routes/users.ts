@@ -111,8 +111,7 @@ usersRouter.get("/me", authenticateToken, async (req: CustomRequest, res: Respon
     }
 
     return res.status(200).json(rows[0]);
-  } catch (err) {
-    console.log(`Auth error:  ${err}`);
+  } catch {
     res.status(500).json({ error: "Internal server error!" });
   }
 })
@@ -130,7 +129,7 @@ usersRouter.post("/refresh-token", (req, res) => {
     }
 
     const newAccessToken = jwt.sign(
-      { userId: user.id },
+      { userId: user.userId },
       process.env.ACCESS_TOKEN_SECRET as string,
       { expiresIn: "15m" }
     );
@@ -144,6 +143,22 @@ usersRouter.post("/refresh-token", (req, res) => {
 
     return res.json({ message: "New access token issued" });
   })
+})
+
+usersRouter.post("/logout", (req, res) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.REACT_APP_NODE_ENV === 'production',
+    sameSite: process.env.REACT_APP_NODE_ENV === 'production' ? 'none' : 'lax'
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.REACT_APP_NODE_ENV === "production",
+    sameSite: process.env.REACT_APP_NODE_ENV === "production" ? "none" : "lax"
+  });
+
+  res.status(200).json({ message: "Logged out successfully" });
 })
 
 export default usersRouter;
