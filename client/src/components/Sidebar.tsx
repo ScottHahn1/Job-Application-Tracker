@@ -33,7 +33,7 @@ const Sidebar = () => {
           Applications
         </Link>
 
-         <Link 
+        <Link 
           to="/register"
           activeProps={{
             className: "bg-blue-700"
@@ -42,6 +42,23 @@ const Sidebar = () => {
         >
           Register
         </Link>
+
+        <Link 
+          to="/login"
+          activeProps={{
+            className: "bg-blue-700"
+          }}
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800"
+        >
+          Login
+        </Link>
+
+        <div 
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800" 
+          onClick={logout}
+        >
+          Logout
+        </div>
       </nav>
     </div>
   )
