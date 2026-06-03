@@ -1,5 +1,12 @@
 import { Link } from "@tanstack/react-router"
 
+const logout = async () => {
+  await fetch("http://localhost:8888/api/users/logout", {
+    method: "POST",
+    credentials: "include"
+  })
+}
+
 const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-blue-900 text-white p-4">
