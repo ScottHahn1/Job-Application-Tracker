@@ -1,6 +1,8 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import Sidebar from "../components/Sidebar";
+import { UserContext, type User } from "../contexts/userContext";
+import { useState } from "react";
 
 export const Route = createRootRoute({ 
   component: RootLayout,
@@ -29,13 +31,17 @@ export const Route = createRootRoute({
 })
 
 function RootLayout() {
+  const [user, setUser] = useState<User | null>(null);
+
   return (
     <>
       <div className="flex">
         <Sidebar />
 
         <main className="flex-1 min-w-0 p-5">
-          <Outlet />
+          <UserContext.Provider value={{ user, setUser }}>
+            <Outlet />
+          </UserContext.Provider>
         </main>
       </div>
 
