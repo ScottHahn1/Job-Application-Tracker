@@ -6,11 +6,22 @@ export const Route = createRootRoute({
   component: RootLayout,
   loader: async () => {
     try {
-      const res = await fetch("http://localhost:8888/api/users/me", {
+      const refreshRes = await fetch("http://localhost:8888/api/users/refresh-token", 
+        { 
+          method: "POST", 
+          credentials: "include" 
+        }
+      );
+
+      if (!refreshRes.ok) {
+        return null;
+      }
+
+      const userRes = await fetch("http://localhost:8888/api/users/me", {
         credentials: "include",
       });
 
-      return res.ok ? res.json() : null;
+      return userRes.ok ? userRes.json() : null;
     } catch (err) {
       return null;
     }
