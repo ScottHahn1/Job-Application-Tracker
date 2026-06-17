@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { createUser, loginUser } from "./users.service";
+import { createUser, generateNewAccessToken, loginUser } from "./users.service";
+import { CustomRequest } from "../middlewares/authToken";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -34,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 15 * 60 * 1000
+      maxAge: 2 * 60 * 1000
     })
 
     res.cookie("refreshToken", refreshToken, {
@@ -70,4 +71,27 @@ export const logout = (req: Request, res: Response) => {
   });
 
   res.status(200).json({ message: "Logged out successfully" });
+}
+
+export const refreshAccessToken = (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "No refresh token provided." });
+  }
+
+  try {
+    const newAccessToken = generateNewAccessToken(refreshToken);
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 2 * 60 * 1000
+    });
+
+    return res.json({ message: "New access token issued" });
+  } catch {
+    return res.status(403).json({ message: "Invalid refresh token." });
+  }
 }
