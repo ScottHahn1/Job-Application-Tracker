@@ -47,3 +47,15 @@ export const loginUser = async (email: string, password: string) => {
     userId: user.id
   }
 }
+
+export const generateNewAccessToken = (refreshToken: string) => {
+  const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as { userId: number };
+
+  const newAccessToken = jwt.sign(
+    { userId: user.userId },
+    process.env.ACCESS_TOKEN_SECRET as string,
+    { expiresIn: "15m" }
+  );
+
+  return newAccessToken;
+}
