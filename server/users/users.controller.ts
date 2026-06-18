@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, generateNewAccessToken, loginUser } from "./users.service";
+import { createUser, generateNewAccessToken, getUser, loginUser } from "./users.service";
 import { CustomRequest } from "../middlewares/authToken";
 
 export const register = async (req: Request, res: Response) => {
@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 2 * 60 * 1000
+      maxAge: 15 * 60 * 1000
     })
 
     res.cookie("refreshToken", refreshToken, {
@@ -87,11 +87,31 @@ export const refreshAccessToken = (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 2 * 60 * 1000
+      maxAge: 15 * 60 * 1000,
     });
 
     return res.json({ message: "New access token issued" });
   } catch {
     return res.status(403).json({ message: "Invalid refresh token." });
+  }
+}
+
+export const getCurrentUser = async (req: CustomRequest, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Authentication required." });
+  }
+
+  const { userId } = req.user;
+
+  try {
+    const rows = await getUser(userId);
+
+    if (rows?.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(rows[0]);
+  } catch {
+    res.status(500).json({ error: "Internal server error!" });
   }
 }
