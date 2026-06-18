@@ -59,3 +59,11 @@ export const generateNewAccessToken = (refreshToken: string) => {
 
   return newAccessToken;
 }
+
+export const getUser = async (userId: number) => {
+  const sql = "SELECT email, id FROM users WHERE id = ?";
+
+  const [rows] = await pool.query<RowDataPacket[]>(sql, [userId]);
+
+  return rows;
+}
