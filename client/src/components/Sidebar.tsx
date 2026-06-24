@@ -1,5 +1,12 @@
 import { Link } from "@tanstack/react-router"
 
+const logout = async () => {
+  await fetch("http://localhost:8888/api/users/logout", {
+    method: "POST",
+    credentials: "include"
+  })
+}
+
 const Sidebar = () => {
   return (
     <div className="h-screen w-64 bg-blue-900 text-white p-4">
@@ -26,7 +33,7 @@ const Sidebar = () => {
           Applications
         </Link>
 
-         <Link 
+        <Link 
           to="/register"
           activeProps={{
             className: "bg-blue-700"
@@ -35,6 +42,23 @@ const Sidebar = () => {
         >
           Register
         </Link>
+
+        <Link 
+          to="/login"
+          activeProps={{
+            className: "bg-blue-700"
+          }}
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800"
+        >
+          Login
+        </Link>
+
+        <div 
+          className="block p-2 rounded cursor-pointer hover:bg-blue-800" 
+          onClick={logout}
+        >
+          Logout
+        </div>
       </nav>
     </div>
   )
