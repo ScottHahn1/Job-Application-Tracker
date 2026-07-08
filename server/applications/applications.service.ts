@@ -11,3 +11,11 @@ export const createApplication = async (
 
   await pool.query(sql, [userId, company, jobTitle, status, date]);
 }
+
+export const getApplications = async (userId: number) => {
+  const sql = "SELECT * FROM applications WHERE user_id = ?";
+
+  const [rows] = await pool.query(sql, [userId]);
+  
+  return rows;
+}
