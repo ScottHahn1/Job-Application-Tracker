@@ -23,3 +23,18 @@ export const addApplication = async ({ company, jobTitle, status, date }: PostVa
 
   return data;
 }
+
+export const getApplications = async () => {
+  const response = await fetch("http://localhost:8888/api/applications", {
+    method: "GET",
+    credentials: "include"
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return data;
+}
