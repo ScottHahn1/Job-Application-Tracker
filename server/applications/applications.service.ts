@@ -19,3 +19,11 @@ export const getApplications = async (userId: number) => {
   
   return rows;
 }
+
+export const deleteApplication = async (applicationId: number) => {
+  const sql = "DELETE FROM applications WHERE id = ?";
+
+  await pool.query(sql, [applicationId]);
+
+  
+}
