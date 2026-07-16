@@ -38,3 +38,15 @@ export const getApplications = async () => {
 
   return data;
 }
+
+export const deleteApplication = async (id: number) => {
+  const response = await fetch(`http://localhost:8888/api/applications?id=${id}`, {
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Something went wrong");
+  }
+}
