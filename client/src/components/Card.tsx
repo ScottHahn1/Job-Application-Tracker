@@ -1,18 +1,21 @@
-type Status = 'Applied' | 'Interview' | 'Offer' | 'Rejected'
+import DeleteApplication from "./DeleteApplication";
 
-export interface CardProps {
+export type Status = "applied" | "interview" | "offer" | "rejected";
+
+interface CardProps {
+  id: number
   company: string;
   role: string;
   status: Status;
   dateApplied: string;
 }
 
-const Card = ({ company, role, status, dateApplied }: CardProps) => {
+const Card = ({ id, company, role, status, dateApplied }: CardProps) => {
   const statusColours = {
-    Applied: 'bg-sky-100 text-sky-600',
-    Interview: 'bg-orange-100 text-orange-600',
-    Offer: 'bg-green-100 text-green-600',
-    Rejected: 'bg-red-100 text-red-600',
+    applied: 'bg-sky-100 text-sky-600',
+    interview: 'bg-orange-100 text-orange-600',
+    offer: 'bg-green-100 text-green-600',
+    rejected: 'bg-red-100 text-red-600',
   }
 
   const statusColour = statusColours[status];
@@ -31,6 +34,8 @@ const Card = ({ company, role, status, dateApplied }: CardProps) => {
 
       <p className="text-sm text-gray-500 mt-2">{company}</p>
       <p className="text-xs text-gray-400 mt-1">{dateApplied}</p>
+
+      <DeleteApplication id={id} />
     </div>
   )
 }
