@@ -11,7 +11,7 @@ function Applications() {
   const [showForm, setShowForm] = useState(false);
   const [company, setCompany] = useState("");
   const [jobTitle, setJobTitle] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Applied");
   const [date, setDate] = useState("");
 
   return (
