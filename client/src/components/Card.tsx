@@ -1,6 +1,6 @@
+import type { Status } from "../types/applications";
+import { formatStatus } from "../utils/applications";
 import DeleteApplication from "./DeleteApplication";
-
-export type Status = "applied" | "interview" | "offer" | "rejected";
 
 interface CardProps {
   id: number
@@ -28,12 +28,12 @@ const Card = ({ id, company, role, status, dateApplied }: CardProps) => {
         </h3>
 
         <span className={`text-xs px-2 rounded-full ${statusColour}`}>
-          {status}
+          {formatStatus(status)}
         </span>
       </div>
 
       <p className="text-sm text-gray-500 mt-2">{company}</p>
-      <p className="text-xs text-gray-400 mt-1">{dateApplied}</p>
+      <p className="text-xs text-gray-400 mt-1">{dateApplied.toString()}</p>
 
       <DeleteApplication id={id} />
     </div>
