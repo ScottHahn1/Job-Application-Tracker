@@ -17,6 +17,38 @@ const Kanban = () => {
     queryFn: getApplications
   })
 
+  const statusColours = {
+    applied: 'bg-sky-200 text-sky-800',
+    interview: 'bg-orange-200 text-orange-800',
+    offer: 'bg-green-200 text-green-800',
+    rejected: 'bg-red-200 text-red-800',
+  }
+
+  if (isLoading) {
+    return (
+      <div className="mt-4 flex justify-center py-12">
+        <div
+          className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-sky-600"
+          role="status"
+          aria-label="Loading"
+        />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div
+        className="mt-4 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-red-800"
+        role="alert"
+      >
+        <p className="text-sm mt-1">
+          {error.message || "Something went wrong. Please try again."}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-6 mt-4 ">
       {
