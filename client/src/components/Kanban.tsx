@@ -1,18 +1,21 @@
 import { useQuery } from "@tanstack/react-query"
 import { getApplications } from "../api/applications"
-import Card, { type Status } from "./Card";
+import Card from "./Card";
+import type { Status } from "../types/applications";
+import { formatStatus } from "../utils/applications";
 
 interface Applications {
+  id: number;
   company_name: string;
   job_title: string;
   status: Status;
-  dateApplied: string;
+  application_date: string;
 }
 
 const Kanban = () => {
-  const statuses = ["applied", "interview", "offer", "rejected"];
+  const statuses: Status[] = ["applied", "interview", "offer", "rejected"];
 
-  const { data: applications, isLoading, isError } = useQuery<Applications[]>({
+  const { data: applications, isLoading, isError, error } = useQuery<Applications[]>({
     queryKey: ["applications"],
     queryFn: getApplications
   })
@@ -50,26 +53,29 @@ const Kanban = () => {
   }
 
   return (
-    <div className="flex gap-6 mt-4 ">
+    <div className="flex gap-6 mt-4">
       {
         statuses?.map(status => (
-          <div className="w-80  bg-gray-100 rounded-2xl p-4 flex flex-col gap-3">
-            <h2 className="font-semibold text-lg text-gray-700 px-3">
-              {status}
+          <div className="w-80 bg-gray-100 rounded-2xl flex flex-col gap-3">
+            <h2 className={`font-semibold text-lg text-gray-700 rounded-xl px-3 py-4 w-full ${statusColours[status]}`}>
+              {formatStatus(status)}
             </h2>
 
-            {
-              applications
-              ?.filter(application => application.status === status)
-              .map(application => (
-                <Card
-                  company={application.company_name}
-                  role={application.job_title}
-                  status={application.status}
-                  dateApplied={application.dateApplied}
-                />
-              ))
-            }
+            <div className="p-4">
+              {
+                applications
+                ?.filter(application => application.status === status)
+                .map(application => (
+                  <Card
+                    id={application.id}
+                    company={application.company_name}
+                    role={application.job_title}
+                    status={application.status}
+                    dateApplied={application.application_date}
+                  />
+                ))
+              }
+            </div> 
           </div>
         ))
       }
