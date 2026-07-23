@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Kanban from '../components/Kanban'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ApplicationForm from '../components/ApplicationForm';
 
 export const Route = createFileRoute("/applications")({
@@ -26,13 +26,29 @@ function Applications() {
   }, [applicationAdded])
 
   return (
-    <div className="p-2">
-      <button 
-        className="py-2 px-4 bg-orange-500 hover:bg-orange-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 text-white rounded-md font-semibold"
-        onClick={() => setShowForm(true)}
-      >
-        Add Job
-      </button>
+    <div className="p-2 flex flex-col">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-semibold">Job Applications</h1>
+
+        {
+          !showForm && (
+            <button 
+              className="py-2 px-4 bg-orange-500 hover:bg-orange-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400 text-white rounded-md font-semibold"
+              onClick={() => setShowForm(true)}
+            >
+              Add Application
+            </button>
+          )
+        }
+      </div>
+
+      {
+        applicationAdded && (
+          <div className="my-4 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-green-800 shadow-sm">
+            <p>✅ Application added successfully.</p>
+          </div>
+        )
+      }
 
       { showForm && 
         <ApplicationForm
@@ -45,6 +61,7 @@ function Applications() {
           date={date}
           setDate={setDate}
           setShowForm={setShowForm}
+          setApplicationAdded={setApplicationAdded}
          /> 
       }
 
