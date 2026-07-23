@@ -13,6 +13,17 @@ function Applications() {
   const [jobTitle, setJobTitle] = useState("");
   const [status, setStatus] = useState("Applied");
   const [date, setDate] = useState("");
+  const [applicationAdded, setApplicationAdded] = useState(false);
+
+  useEffect(() => {
+    if (!applicationAdded) return;
+
+    const timer = setTimeout(() => {
+      setApplicationAdded(false);
+    }, 3000)
+    
+    return () => clearTimeout(timer);
+  }, [applicationAdded])
 
   return (
     <div className="p-2">
