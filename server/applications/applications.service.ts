@@ -1,3 +1,4 @@
+import { RowDataPacket } from "mysql2";
 import pool from "../config/database";
 
 export const createApplication = async (
@@ -23,7 +24,20 @@ export const getApplications = async (userId: number) => {
 export const deleteApplication = async (applicationId: number) => {
   const sql = "DELETE FROM applications WHERE id = ?";
 
-  await pool.query(sql, [applicationId]);
+  await pool.query(sql, [applicationId]); 
+}
 
-  
+export const totalApplications = async (userId: number) => {
+  const sql = `
+  SELECT COUNT(*) AS total,
+  SUM(status = "applied") AS applied,
+  SUM(status = "interview") AS interview,
+  SUM(status = "offer") AS offer,
+  SUM(status = "rejected") AS rejected
+  FROM applications WHERE user_id = ?`;
+
+  const [rows] = await pool.query<RowDataPacket[]>(sql, [userId]);
+
+
+  return rows[0];
 }
