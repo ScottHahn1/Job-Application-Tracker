@@ -2,7 +2,8 @@ import { Response } from "express";
 import { 
   createApplication as createApplicationService, 
   getApplications as getApplicationsService,
-  deleteApplication as deleteApplicationService 
+  deleteApplication as deleteApplicationService,
+  totalApplications as totalApplicationsService,
   } 
 from "./applications.service";
 import { CustomRequest } from "../middlewares/authToken"; 
@@ -42,6 +43,18 @@ export const deleteApplication = async (req: CustomRequest, res: Response) => {
   try {
     await deleteApplicationService(Number(id));
     return res.status(204).end();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server error" });
+  }
+}
+
+export const totalApplications = async (req: CustomRequest, res: Response) => {
+  const userId  = req.user!.userId;
+
+  try {
+    const data = await totalApplicationsService(Number(userId));
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server error" });
