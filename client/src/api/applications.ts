@@ -50,3 +50,18 @@ export const deleteApplication = async (id: number) => {
     throw new Error(data.message || "Something went wrong");
   }
 }
+
+export const getTotalApplications = async () => {
+  const response = await fetch("http://localhost:8888/api/applications/total", {
+    method: "GET",
+    credentials: "include"
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return data;
+}
