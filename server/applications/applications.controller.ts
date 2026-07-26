@@ -4,6 +4,7 @@ import {
   getApplications as getApplicationsService,
   deleteApplication as deleteApplicationService,
   totalApplications as totalApplicationsService,
+  recentApplications as recentApplicationsService,
   } 
 from "./applications.service";
 import { CustomRequest } from "../middlewares/authToken"; 
@@ -50,10 +51,22 @@ export const deleteApplication = async (req: CustomRequest, res: Response) => {
 }
 
 export const totalApplications = async (req: CustomRequest, res: Response) => {
-  const userId  = req.user!.userId;
+  const userId = req.user!.userId;
 
   try {
     const data = await totalApplicationsService(Number(userId));
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server error" });
+  }
+}
+
+export const recentApplications = async (req: CustomRequest, res: Response) => {
+  const userId = req.user!.userId;
+
+  try {
+    const data = await recentApplicationsService(Number(userId));
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

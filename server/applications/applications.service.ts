@@ -41,3 +41,16 @@ export const totalApplications = async (userId: number) => {
 
   return rows[0];
 }
+
+export const recentApplications = async (userId: number) => {
+  const sql = `
+  SELECT * FROM applications 
+  WHERE user_id = ? 
+  ORDER BY application_date  DESC
+  LIMIT 5
+  `;
+
+  const [rows] = await pool.query(sql, [userId]);
+
+  return rows;
+}
