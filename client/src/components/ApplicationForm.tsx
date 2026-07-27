@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { addApplication } from "../api/applications";
+import { Info } from "lucide-react";
 
 interface Props {
   company: string;
@@ -29,16 +30,13 @@ const ApplicationForm = ({
 }: Props) => {
   const queryClient = useQueryClient();
   
-  // const [applicationAdded, setApplicationAdded] = useState(false);
-
-  const { mutate } = useMutation({
+  const { mutate, isError, error } = useMutation({
     mutationFn: addApplication,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
       setApplicationAdded(true);
       setShowForm(false);
-    },
-    onError: (err) => alert(`Mutation error: ${err}`)
+    }
   })
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -120,6 +118,16 @@ const ApplicationForm = ({
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
+
+        {isError && (
+          <div
+            className="flex gap-2 mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800"
+            role="alert"
+          >
+            <Info className="w-5 h-5" /> 
+            <span>{error.message}</span>
+          </div>
+        )}
 
         <button
           type="button"
