@@ -31,18 +31,19 @@ export const Route = createRootRoute({
 })
 
 function RootLayout() {
-  const [user, setUser] = useState<User | null>(null);
+  const loaderUser = Route.useLoaderData();
+  const [user, setUser] = useState<User | null>(loaderUser);
 
   return (
     <>
       <div className="flex">
-        <Sidebar />
+        <UserContext.Provider value={{ user, setUser }}>
+          <Sidebar />
 
-        <main className="flex-1 min-w-0 p-5">
-          <UserContext.Provider value={{ user, setUser }}>
+          <main className="flex-1 min-w-0 p-5">
             <Outlet />
-          </UserContext.Provider>
-        </main>
+          </main>
+        </UserContext.Provider>
       </div>
 
       <TanStackRouterDevtools />
