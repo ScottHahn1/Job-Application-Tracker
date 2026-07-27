@@ -15,6 +15,12 @@ export const addApplication = async ({ company, jobTitle, status, date }: PostVa
     body: JSON.stringify({ company, jobTitle, status, date})
   })
 
+  if (response.status === 401) {
+    throw new Error(
+      "Demo mode: Sign in to add applications."
+    );
+  }
+
   const data = await response.json();
 
   if (!response.ok) {
@@ -24,8 +30,12 @@ export const addApplication = async ({ company, jobTitle, status, date }: PostVa
   return data;
 }
 
-export const getApplications = async () => {
-  const response = await fetch("http://localhost:8888/api/applications", {
+export const getApplications = async (isDemo: boolean) => {
+  const url = isDemo 
+  ? "http://localhost:8888/api/applications/demo" 
+  : "http://localhost:8888/api/applications";
+  
+  const response = await fetch(url, {
     method: "GET",
     credentials: "include"
   });
@@ -45,14 +55,24 @@ export const deleteApplication = async (id: number) => {
     credentials: "include"
   });
 
+  if (response.status === 401) {
+    throw new Error(
+      "Demo mode: Sign in to delete applications."
+    );
+  }
+
   if (!response.ok) {
     const data = await response.json();
     throw new Error(data.message || "Something went wrong");
   }
 }
 
-export const getTotalApplications = async () => {
-  const response = await fetch("http://localhost:8888/api/applications/total", {
+export const getTotalApplications = async (isDemo: boolean) => {
+  const url = isDemo 
+  ? "http://localhost:8888/api/applications/total/demo" 
+  : "http://localhost:8888/api/applications/total";
+
+  const response = await fetch(url, {
     method: "GET",
     credentials: "include"
   });
@@ -66,8 +86,12 @@ export const getTotalApplications = async () => {
   return data;
 }
 
-export const getRecentApplications = async () => {
-  const response = await fetch("http://localhost:8888/api/applications/recent", {
+export const getRecentApplications = async (isDemo: boolean) => {
+  const url = isDemo 
+  ? "http://localhost:8888/api/applications/recent/demo" 
+  : "http://localhost:8888/api/applications/recent";
+
+  const response = await fetch(url, {
     method: "GET",
     credentials: "include"
   });

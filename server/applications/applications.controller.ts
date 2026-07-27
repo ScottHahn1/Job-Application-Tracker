@@ -38,6 +38,16 @@ export const getApplications = async (req: CustomRequest, res: Response) => {
   }
 }
 
+export const getDemoApplications = async (req: CustomRequest, res: Response) => {
+  try {
+    const data = await getApplicationsService(1);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 export const deleteApplication = async (req: CustomRequest, res: Response) => {
   const { id } = req.query;
 
@@ -62,11 +72,31 @@ export const totalApplications = async (req: CustomRequest, res: Response) => {
   }
 }
 
+export const totalDemoApplications = async (req: CustomRequest, res: Response) => {
+  try {
+    const data = await totalApplicationsService(1);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server error" });
+  }
+}
+
 export const recentApplications = async (req: CustomRequest, res: Response) => {
   const userId = req.user!.userId;
 
   try {
     const data = await recentApplicationsService(Number(userId));
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server error" });
+  }
+}
+
+export const recentDemoApplications = async (req: CustomRequest, res: Response) => {
+  try {
+    const data = await recentApplicationsService(1);
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);

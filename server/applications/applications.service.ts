@@ -38,7 +38,6 @@ export const totalApplications = async (userId: number) => {
 
   const [rows] = await pool.query<RowDataPacket[]>(sql, [userId]);
 
-
   return rows[0];
 }
 
