@@ -20,7 +20,7 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const { mutate } = useMutation({
+  const { mutate, isError } = useMutation({
     mutationFn: async ({ email, password }: PostVariables) => {
       const response = await fetch("http://localhost:8888/api/users/register", {
         method: "POST",
@@ -48,22 +48,35 @@ function Register() {
 
   const signUp = (e: React.SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
     mutate({ email, password });
   };
 
   return (
-    <RegisterForm 
-      handleSubmit={signUp}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
-      confirmPassword={confirmPassword}
-      setConfirmPassword={setConfirmPassword}
-      error={error}
-    />
+    <div>
+      <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+
+      <p className="text-gray-600 mb-8">
+        Sign up to start tracking your job applications.
+      </p>
+      
+      <RegisterForm
+        handleSubmit={signUp}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        isError={isError}
+        error={error}
+      />
+    </div>
   )
 }
