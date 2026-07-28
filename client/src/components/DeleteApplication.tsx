@@ -19,7 +19,7 @@ const DeleteApplication = ({ id }: DeleteApplicationProps) => {
     <div>
       <div className="flex justify-end">
         <button
-          className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          className="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-medium cursor-pointer text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
           onClick={() => mutate(id)}
           type="button"
         >
