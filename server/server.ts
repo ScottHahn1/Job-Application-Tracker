@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import usersRouter from "./users/users.route";
+import usersRouter from "./users/users.route.js";
 import cookieParser from 'cookie-parser';
-import applicationsRouter from "./applications/applications.route";
+import applicationsRouter from "./applications/applications.route.js";
 
 dotenv.config();
 

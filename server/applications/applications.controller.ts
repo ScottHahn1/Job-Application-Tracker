@@ -6,7 +6,7 @@ import {
   totalApplications as totalApplicationsService,
   recentApplications as recentApplicationsService,
   } 
-from "./applications.service";
+from "./applications.service.js";
 import { CustomRequest } from "../middlewares/authToken"; 
 
 export const createApplication = async (req: CustomRequest, res: Response) => {

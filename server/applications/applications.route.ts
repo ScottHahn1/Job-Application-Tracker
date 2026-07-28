@@ -1,9 +1,9 @@
 import { Router } from "express";
 import authenticateToken from "../middlewares/authToken";
-import { createApplication, deleteApplication, getDemoApplications, recentDemoApplications, totalDemoApplications } from "./applications.controller";
-import { getApplications } from "./applications.controller";
-import { totalApplications } from "./applications.controller";
-import { recentApplications } from "./applications.controller";
+import { createApplication, deleteApplication, getDemoApplications, recentDemoApplications, totalDemoApplications } from "./applications.controller.js";
+import { getApplications } from "./applications.controller.js";
+import { totalApplications } from "./applications.controller.js";
+import { recentApplications } from "./applications.controller.js";
 
 const applicationsRouter = Router();
 
