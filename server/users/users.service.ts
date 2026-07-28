@@ -1,4 +1,4 @@
-import pool from "../config/database";
+import pool from "../config/database.js";
 import bcrypt from "bcrypt";
 import { RowDataPacket } from "mysql2";
 import jwt from "jsonwebtoken";
