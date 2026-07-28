@@ -50,11 +50,12 @@ const RecentApplications = () => {
     <div>
       <h2 className="font-semibold text-lg text-gray-700 rounded-xl py-4 w-full">Recent Applications</h2>
       
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         {
           recent?.length ?
           recent.map(application => (
             <DashboardCard
+              key={application.id}
               id={application.id}
               company={application.company_name}
               role={application.job_title}
