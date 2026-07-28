@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT ?? 8888;
 
 const frontendUrl = process.env.NODE_ENV === "production" 
-? "" 
+? "https://careerpier.vercel.app" 
 : "http://localhost:5173";
 
 app.use(cors({
