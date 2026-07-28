@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import LoginForm from "../components/LoginForm";
 
@@ -18,9 +18,9 @@ function Login() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(true);
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const { mutate } = useMutation({
+  const { mutate, isError } = useMutation({
     mutationFn: async ({ email, password }: PostVariables) => {
       const response = await fetch("http://localhost:8888/api/users/login", {
         method: "POST",
@@ -39,15 +39,16 @@ function Login() {
 
       return data;
     },
-    onSuccess: () => {
-      setTimeout(() => navigate({ to: "/" }), 2000);
+    onSuccess: async () => {
+      await router.invalidate();
+      router.navigate({ to: "/" });
     },
     onError: (err: Error) => {
       setError(err.message);
     }
   });
 
-   const login = (e: React.SubmitEvent<HTMLFormElement>): void => {
+  const login = (e: React.SubmitEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     setError("");
@@ -57,7 +58,11 @@ function Login() {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h1 className="text-3xl font-bold mb-2">Sign In</h1>
+
+      <p className="text-gray-600 mb-8">
+        Sign in to your account.
+      </p>
 
       <LoginForm
         handleSubmit={login}
@@ -67,6 +72,7 @@ function Login() {
         showPassword={showPassword}
         password={password}
         setPassword={setPassword}
+        isError={isError}
         error={error}
       />
     </div>
