@@ -7,7 +7,7 @@ import {
   recentApplications as recentApplicationsService,
   } 
 from "./applications.service.js";
-import { CustomRequest } from "../middlewares/authToken"; 
+import { CustomRequest } from "../middlewares/authToken.js"; 
 
 export const createApplication = async (req: CustomRequest, res: Response) => {
   const { company, jobTitle, status, date } = req.body;

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authenticateToken from "../middlewares/authToken";
+import authenticateToken from "../middlewares/authToken.js";
 import { createApplication, deleteApplication, getDemoApplications, recentDemoApplications, totalDemoApplications } from "./applications.controller.js";
 import { getApplications } from "./applications.controller.js";
 import { totalApplications } from "./applications.controller.js";

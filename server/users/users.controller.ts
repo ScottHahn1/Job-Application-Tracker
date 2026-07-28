@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createUser, generateNewAccessToken, getUser, loginUser } from "./users.service.js";
-import { CustomRequest } from "../middlewares/authToken";
+import { CustomRequest } from "../middlewares/authToken.js";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
