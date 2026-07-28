@@ -2,7 +2,8 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import Sidebar from "../components/Sidebar";
 import { UserContext, type User } from "../contexts/userContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 
 export const Route = createRootRoute({ 
   component: RootLayout,
@@ -34,11 +35,21 @@ function RootLayout() {
   const loaderUser = Route.useLoaderData();
   const [user, setUser] = useState<User | null>(loaderUser);
 
+  useEffect(() => {
+    setUser(loaderUser);
+  }, [loaderUser]);
+
   return (
     <>
-      <div className="flex">
+      <div className="md:flex">
         <UserContext.Provider value={{ user, setUser }}>
-          <Sidebar />
+          <div className="hidden md:flex">
+            <Sidebar />
+          </div>
+
+          <div className="md:hidden">
+            <Navbar />
+          </div>
 
           <main className="flex-1 min-w-0 p-5">
             <Outlet />
