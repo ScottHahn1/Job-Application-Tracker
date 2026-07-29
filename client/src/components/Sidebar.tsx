@@ -3,7 +3,7 @@ import { Briefcase, BriefcaseBusiness, LayoutDashboard, LogIn, LogOut, UserPlus 
 import { useUserContext } from "../contexts/userContext";
 
 export const logout = async () => {
-  await fetch("http://localhost:8888/api/users/logout", {
+  await fetch(`${import.meta.env.VITE_API_URL}/api/users/logout`, {
     method: "POST",
     credentials: "include"
   })

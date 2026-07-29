@@ -22,7 +22,7 @@ function Register() {
 
   const { mutate, isError } = useMutation({
     mutationFn: async ({ email, password }: PostVariables) => {
-      const response = await fetch("http://localhost:8888/api/users/register", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -9,7 +9,7 @@ export const Route = createRootRoute({
   component: RootLayout,
   loader: async () => {
     try {
-      const refreshRes = await fetch("http://localhost:8888/api/users/refresh-token", 
+      const refreshRes = await fetch(`${import.meta.env.VITE_API_URL}/api/users/refresh-token`, 
         { 
           method: "POST", 
           credentials: "include" 
@@ -20,7 +20,7 @@ export const Route = createRootRoute({
         return null;
       }
 
-      const userRes = await fetch("http://localhost:8888/api/users/me", {
+      const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
         credentials: "include",
       });
 

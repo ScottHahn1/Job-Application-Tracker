@@ -6,7 +6,7 @@ interface PostVariables {
 }
 
 export const addApplication = async ({ company, jobTitle, status, date }: PostVariables) => {
-  const response = await fetch("http://localhost:8888/api/applications", {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -32,8 +32,8 @@ export const addApplication = async ({ company, jobTitle, status, date }: PostVa
 
 export const getApplications = async (isDemo: boolean) => {
   const url = isDemo 
-  ? "http://localhost:8888/api/applications/demo" 
-  : "http://localhost:8888/api/applications";
+  ? `${import.meta.env.VITE_API_URL}/api/applications/demo`
+  : `${import.meta.env.VITE_API_URL}/api/applications`;
   
   const response = await fetch(url, {
     method: "GET",
@@ -50,7 +50,7 @@ export const getApplications = async (isDemo: boolean) => {
 }
 
 export const deleteApplication = async (id: number) => {
-  const response = await fetch(`http://localhost:8888/api/applications?id=${id}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications?id=${id}`, {
     method: "DELETE",
     credentials: "include"
   });
@@ -69,8 +69,8 @@ export const deleteApplication = async (id: number) => {
 
 export const getTotalApplications = async (isDemo: boolean) => {
   const url = isDemo 
-  ? "http://localhost:8888/api/applications/total/demo" 
-  : "http://localhost:8888/api/applications/total";
+  ? `${import.meta.env.VITE_API_URL}/api/applications/total/demo` 
+  : `${import.meta.env.VITE_API_URL}/api/applications/total`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -88,8 +88,8 @@ export const getTotalApplications = async (isDemo: boolean) => {
 
 export const getRecentApplications = async (isDemo: boolean) => {
   const url = isDemo 
-  ? "http://localhost:8888/api/applications/recent/demo" 
-  : "http://localhost:8888/api/applications/recent";
+  ? `${import.meta.env.VITE_API_URL}/api/applications/recent/demo` 
+  : `${import.meta.env.VITE_API_URL}/api/applications/recent`;
 
   const response = await fetch(url, {
     method: "GET",
