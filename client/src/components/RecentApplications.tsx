@@ -17,7 +17,7 @@ const RecentApplications = () => {
   const { user } = useUserContext();
   
   const { data: recent, isLoading, isError, error } = useQuery<Applications[]>({
-    queryKey: ["recentApplications"],
+    queryKey: ["recentApplications", user?.id],
     queryFn: () => getRecentApplications(user === null)
   })
 

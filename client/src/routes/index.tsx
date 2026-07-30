@@ -21,7 +21,7 @@ function Home () {
   const { user } = useUserContext();
 
   const { data: total, isLoading, isError, error } = useQuery<TotalApplicationsData>({
-    queryKey: ["totalApplications"],
+    queryKey: ["totalApplications", user?.id],
     queryFn: () => getTotalApplications(user === null)
   })
 
