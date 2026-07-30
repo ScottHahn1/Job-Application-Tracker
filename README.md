@@ -71,7 +71,7 @@ ACCESS_TOKEN_SECRET=your_access_token_secret
 REFRESH_TOKEN_SECRET=your_refresh_token_secret
 NODE_ENV=development
 ```
-npm run dev
+Start the backend server
 
 ```bash
 npm run dev
