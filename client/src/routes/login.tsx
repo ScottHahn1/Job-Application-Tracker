@@ -41,7 +41,7 @@ function Login() {
     },
     onSuccess: async () => {
       await router.invalidate();
-      router.navigate({ to: "/" });
+      await router.navigate({ to: "/" });
     },
     onError: (err: Error) => {
       setError(err.message);
