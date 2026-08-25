@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import Kanban from '../components/Kanban'
 import { useEffect, useState } from 'react';
 import ApplicationForm from '../components/ApplicationForm';
 import { useUserContext } from '../contexts/userContext';
+import DemoModeBanner from '../components/DemoModeBanner';
 
 export const Route = createFileRoute("/applications")({
   component: Applications,
@@ -32,30 +33,11 @@ function Applications() {
     <div className="p-2 flex flex-col">
       {
         !user && (
-          <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-            <span className="font-medium">Demo Mode</span>. 
-            You're viewing sample application data. 
-            {" "}
-            <Link to="/login" className="font-semibold underline hover:no-underline">
-              Sign in
-            </Link>
-            {" "}
-            or
-            {" "}
-            <Link
-              to="/register"
-              className="font-semibold underline hover:no-underline"
-            >
-              create an account
-            </Link>
-            {" "}
-            to manage your own applications.
-          </div>
+          <DemoModeBanner />
         )
-        }
+      }
       
       <div className="flex justify-center md:justify-between">
-
         <div className="flex flex-col gap-4 md:flex-row md:gap-0 md:justify-between md:w-full">
           <h1 className="text-2xl font-semibold">Job Applications</h1>
 
