@@ -2,7 +2,6 @@ import type { Status } from "../types/applications";
 import type { TotalApplicationsData } from "../routes";
 
 interface TotalApplicationsProps {
-  isLoading: boolean;
   isError: boolean;
   error: Error | null;
   total: TotalApplicationsData | undefined;
@@ -10,19 +9,7 @@ interface TotalApplicationsProps {
 
 const statuses: Status[] = ["applied", "interview", "offer", "rejected"];
 
-const TotalApplications = ({ isLoading, isError, error, total }: TotalApplicationsProps) => {
-  if (isLoading) {
-    return (
-      <div className="mt-4 flex justify-center py-12">
-        <div
-          className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-sky-600"
-          role="status"
-          aria-label="Loading total applications"
-        />
-      </div>
-    )
-  }
-
+const TotalApplications = ({ isError, error, total }: TotalApplicationsProps) => {
   if (isError) {
     return (
       <div
@@ -50,9 +37,9 @@ const TotalApplications = ({ isLoading, isError, error, total }: TotalApplicatio
                     status[0].toUpperCase() + status.slice(1)
                   }
                 </p>
-                <h2 className="text-3xl font-semibold">
+                <span className="text-3xl font-semibold">
                   { total?.[status] ?? 0 }
-                </h2>
+                </span>
               </div>
             ))
           }
@@ -72,13 +59,13 @@ const TotalApplications = ({ isLoading, isError, error, total }: TotalApplicatio
                   }
                 </p>
                 
-                <h2 className="text-3xl font-semibold">
+                <span className="text-3xl font-semibold">
                   {
                     total?.[status] && total.total
                     ? `${Math.round((total[status] / total.total) * 100)}%`
                     : "0%"
                   }
-                </h2>
+                </span>
               </div>
             ))
           }

@@ -1,38 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { getRecentApplications } from "../api/applications";
-import type { Status } from "../types/applications";
 import DashboardCard from "./DashboardCard";
 import { Link } from "@tanstack/react-router";
-import { useUserContext } from "../contexts/userContext";
+import type { RecentApplicationsData } from "../routes";
 
-interface Applications {
-  id: number;
-  company_name: string;
-  job_title: string;
-  status: Status;
-  application_date: string;
+interface RecentApplicationsProps {
+  isError: boolean;
+  error: Error | null;
+  recent: RecentApplicationsData[] | undefined;
 }
 
-const RecentApplications = () => {
-  const { user } = useUserContext();
-  
-  const { data: recent, isLoading, isError, error } = useQuery<Applications[]>({
-    queryKey: ["recentApplications", user?.id],
-    queryFn: () => getRecentApplications(user === null)
-  })
-
-  if (isLoading) {
-    return (
-      <div className="mt-4 flex justify-center py-12">
-        <div
-          className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-sky-600"
-          role="status"
-          aria-label="Loading recent applications"
-        />
-      </div>
-    );
-  }
-
+const RecentApplications = ({ recent, isError, error }: RecentApplicationsProps) => {
   if (isError) {
     return (
       <div
@@ -40,7 +16,7 @@ const RecentApplications = () => {
         role="alert"
       >
         <p className="text-sm mt-1">
-          {error.message || "Something went wrong. Please try again."}
+          {error?.message || "Something went wrong. Please try again."}
         </p>
       </div>
     );

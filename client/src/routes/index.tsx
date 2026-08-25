@@ -13,6 +13,14 @@ export interface TotalApplicationsData {
   rejected: number;
 }
 
+export interface RecentApplicationsData {
+  id: number;
+  company_name: string;
+  job_title: string;
+  status: Status;
+  application_date: string;
+}
+
 export const Route = createFileRoute("/")({
   component: Home
 })
@@ -20,10 +28,31 @@ export const Route = createFileRoute("/")({
 function Home () {
   const { user } = useUserContext();
 
-  const { data: total, isLoading, isError, error } = useQuery<TotalApplicationsData>({
+  const { 
+    data: total, isLoading: isTotalLoading, isError: isTotalError, error: totalError 
+  } = useQuery<TotalApplicationsData>({
     queryKey: ["totalApplications", user?.id],
     queryFn: () => getTotalApplications(user === null)
   })
+
+  const { 
+    data: recent, isLoading: isRecentLoading, isError: isRecentError, error: recentError 
+  } = useQuery<RecentApplicationsData[]>({
+    queryKey: ["recentApplications", user?.id],
+    queryFn: () => getRecentApplications(user === null)
+  })
+
+  if (isTotalLoading || isRecentLoading) {
+    return (
+      <div className="mt-4 flex justify-center py-12">
+        <div
+          className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-sky-600"
+          role="status"
+          aria-label="Loading applications"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 bg-gray-50 md:p-4">
@@ -52,13 +81,16 @@ function Home () {
       }
 
       <TotalApplications
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
+        isError={isTotalError}
+        error={totalError}
         total={total}
       />
 
-      <RecentApplications />
+      <RecentApplications 
+        isError={isRecentError}
+        error={recentError}
+        recent={recent}
+      />
     </div>
   )
 }
