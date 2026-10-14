@@ -12,6 +12,24 @@ interface PostVariables {
     password: string;
 };
 
+export const registerUser = async (email: string, password: string) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password})
+  })
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return data;
+}
+
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,21 +40,7 @@ function Register() {
 
   const { mutate, isError } = useMutation({
     mutationFn: async ({ email, password }: PostVariables) => {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password})
-      })
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      return data;
+      return registerUser(email, password);
     },
     onSuccess: () => {
       setTimeout(() => navigate({ to: "/login" }), 2000);
