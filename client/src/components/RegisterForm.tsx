@@ -9,7 +9,6 @@ interface Props {
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
   error: string;
-  isError: boolean;
   setPassword: Dispatch<SetStateAction<string>>;
   password: string;
   confirmPassword: string;
@@ -21,7 +20,6 @@ const RegisterForm = ({
   email, 
   setEmail,
   error,
-  isError,
   setPassword,
   password,
   confirmPassword,
@@ -110,7 +108,7 @@ const RegisterForm = ({
           />
         </div>
 
-        {isError && (
+        {error && (
           <div
             className="flex gap-2 mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800"
             role="alert"

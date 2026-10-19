@@ -34,7 +34,7 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const { mutate, isError } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async ({ email, password }: PostVariables) => {
       return registerUser(email, password);
     },
@@ -74,7 +74,6 @@ const Register = () => {
         setPassword={setPassword}
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
-        isError={isError}
         error={error}
       />
     </div>
