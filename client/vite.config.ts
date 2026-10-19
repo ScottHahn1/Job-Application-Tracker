@@ -13,7 +13,7 @@ export default defineConfig({
     tailwindcss()
   ],
   test: {
-    setupFiles: ["./src/mocks/setup.ts"],
+    setupFiles: ["./src/mocks/setup.ts", "./vitest.setup.ts"],
     environment: 'jsdom',
   },
 })
