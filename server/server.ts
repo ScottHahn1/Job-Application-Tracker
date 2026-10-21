@@ -4,6 +4,7 @@ import cors from "cors";
 import usersRouter from "./users/users.route.js";
 import cookieParser from 'cookie-parser';
 import applicationsRouter from "./applications/applications.route.js";
+import error from "./middlewares/error.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 app.use("/api/users", usersRouter);
 app.use("/api/applications", applicationsRouter);
+app.use(error);
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(port, () => {
