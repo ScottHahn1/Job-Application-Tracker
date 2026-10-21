@@ -2,6 +2,7 @@ import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Info } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import { handleInputChange } from "../utils/user";
 
 interface Props {
   handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
@@ -11,8 +12,8 @@ interface Props {
   showPassword: boolean;
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
-  isError: boolean;
   error: string;
+  setError: Dispatch<SetStateAction<string>>;
 }
 
 const LoginForm = ({
@@ -23,12 +24,9 @@ const LoginForm = ({
   showPassword,
   password,
   setPassword,
-  isError,
-  error
+  error,
+  setError
 }: Props) => {
-  const isFormValid =
-  email.length > 0 && password.length >= 8;
-
   return (
      <form
       onSubmit={handleSubmit}
@@ -49,7 +47,7 @@ const LoginForm = ({
             placeholder="example@email.com"
             pattern="[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,6}"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleInputChange(e, setEmail, setError)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
         </div>
@@ -79,7 +77,9 @@ const LoginForm = ({
             id="password"
             type={showPassword ? "text" : "password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            minLength={8}
+            maxLength={50}
+            onChange={(e) => handleInputChange(e, setPassword, setError)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
 
@@ -88,7 +88,7 @@ const LoginForm = ({
           )}
         </div>
 
-        {isError && (
+        {error && (
           <div
             className="flex gap-2 mt-3 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800"
             role="alert"
@@ -100,7 +100,6 @@ const LoginForm = ({
 
         <button
           type="submit"
-          disabled={!isFormValid}
           className="rounded-md cursor-pointer bg-orange-500 px-4 py-2 font-semibold text-white transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
         >
           Login
