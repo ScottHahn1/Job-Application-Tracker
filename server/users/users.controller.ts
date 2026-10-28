@@ -6,55 +6,71 @@ export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+    return res.status(400).json({
+      message: "Email and password are required",
+    });
   }
 
-  try {
-    await createUser(email, password);
-    return res.status(201).json({ registered: true });
-  } catch (error: any) {
-    if (error.code === "ER_DUP_ENTRY") {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
-    return res.status(500).json({ error: "Internal server error" });
+  if (password.length < 8) {
+     return res.status(400).json({
+      message: "Password must be at least 8 characters",
+    });
   }
+
+  if (password.length > 50) {
+    return res.status(400).json({
+      message: "Password cannot exceed 50 characters",
+    });
+  }
+
+  await createUser(email, password);
+  return res.status(201).json({ registered: true });
 }
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+    return res.status(400).json({
+      message: "Email and password are required",
+    });
   }
 
-  try {
-    const { accessToken, refreshToken, userId } = await loginUser(email, password);
-
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 15 * 60 * 1000
-    })
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+  if (password.length < 8) {
+    return res.status(400).json({
+      message: "Password must be at least 8 characters",
     });
-
-    return res.status(200).json({
-      success: true,
-      login: true,
-      message: "Login Successful!",
-      email,
-      userId
-    });
-  } catch {
-    return res.status(500).json({ error: "Internal server error" });
   }
+
+  if (password.length > 50) {
+    return res.status(400).json({
+      message: "Password cannot exceed 50 characters",
+    });
+  }
+
+  const { accessToken, refreshToken, userId } = await loginUser(email, password);
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 15 * 60 * 1000
+  })
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
+  return res.status(200).json({
+    success: true,
+    login: true,
+    message: "Login Successful!",
+    email,
+    userId
+  });
 }
 
 export const logout = (req: Request, res: Response) => {
