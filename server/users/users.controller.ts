@@ -1,26 +1,21 @@
 import { Request, Response } from "express";
 import { createUser, generateNewAccessToken, getUser, loginUser } from "./users.service.js";
 import { CustomRequest } from "../middlewares/authToken.js";
+import { CustomError } from "../middlewares/error.js";
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({
-      message: "Email and password are required",
-    });
+    throw new CustomError("Email and password are required", 400)
   }
 
   if (password.length < 8) {
-     return res.status(400).json({
-      message: "Password must be at least 8 characters",
-    });
+    throw new CustomError("Password must be at least 8 characters", 400);
   }
 
   if (password.length > 50) {
-    return res.status(400).json({
-      message: "Password cannot exceed 50 characters",
-    });
+    throw new CustomError("Password cannot exceed 50 characters", 400);
   }
 
   await createUser(email, password);
@@ -31,21 +26,15 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({
-      message: "Email and password are required",
-    });
+    throw new CustomError("Email and password are required", 400)
   }
 
   if (password.length < 8) {
-    return res.status(400).json({
-      message: "Password must be at least 8 characters",
-    });
+    throw new CustomError("Password must be at least 8 characters", 400);
   }
 
   if (password.length > 50) {
-    return res.status(400).json({
-      message: "Password cannot exceed 50 characters",
-    });
+    throw new CustomError("Password cannot exceed 50 characters", 400);
   }
 
   const { accessToken, refreshToken, userId } = await loginUser(email, password);
@@ -57,12 +46,12 @@ export const login = async (req: Request, res: Response) => {
     maxAge: 15 * 60 * 1000
   })
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  });
+  // res.cookie("refreshToken", refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  //   maxAge: 7 * 24 * 60 * 60 * 1000
+  // });
 
   return res.status(200).json({
     success: true,
@@ -93,23 +82,19 @@ export const refreshAccessToken = (req: Request, res: Response) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    return res.status(401).json({ message: "No refresh token provided." });
+    throw new CustomError("No refresh token provided.", 401);
   }
 
-  try {
-    const newAccessToken = generateNewAccessToken(refreshToken);
+  const newAccessToken = generateNewAccessToken(refreshToken);
 
-    res.cookie("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 15 * 60 * 1000,
-    });
+  res.cookie("accessToken", newAccessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 15 * 60 * 1000,
+  });
 
-    return res.json({ message: "New access token issued" });
-  } catch {
-    return res.status(403).json({ message: "Invalid refresh token." });
-  }
+  return res.status(200).json({ message: "New access token issued." }); 
 }
 
 export const getCurrentUser = async (req: CustomRequest, res: Response) => {

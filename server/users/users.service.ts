@@ -2,6 +2,7 @@ import pool from "../config/database.js";
 import bcrypt from "bcrypt";
 import { RowDataPacket } from "mysql2";
 import jwt from "jsonwebtoken";
+import { CustomError } from "../middlewares/error.js";
 
 const saltRounds = 10;
 
@@ -20,13 +21,13 @@ export const loginUser = async (email: string, password: string) => {
   const user = result[0];
 
   if (!user) {
-    throw new Error("Invalid email");
+    throw new CustomError("Invalid email", 404);
   }
 
   const match = await bcrypt.compare(password, user.hashed_password);
 
   if (!match) {
-    throw new Error("Incorrect password");
+    throw new CustomError("Incorrect password", 404);
   }
 
   const accessToken = jwt.sign(
@@ -49,15 +50,19 @@ export const loginUser = async (email: string, password: string) => {
 }
 
 export const generateNewAccessToken = (refreshToken: string) => {
-  const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as { userId: number };
+  try {
+    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as { userId: number };
 
-  const newAccessToken = jwt.sign(
-    { userId: user.userId },
-    process.env.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: "15m" }
-  );
+    const newAccessToken = jwt.sign(
+      { userId: user.userId },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: "15m" }
+    );
 
-  return newAccessToken;
+    return newAccessToken;
+  } catch {
+    throw new CustomError("Invalid refresh token.", 401);
+  }
 }
 
 export const getUser = async (userId: number) => {
