@@ -81,6 +81,8 @@ const RegisterForm = ({
             required
             type={showPassword ? "text" : "password"}
             value={password}
+            minLength={8}
+            maxLength={50}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
