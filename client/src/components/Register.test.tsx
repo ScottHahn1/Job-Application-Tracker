@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { server } from "../mocks/setup";
 import { http, HttpResponse } from "msw";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -40,7 +40,7 @@ describe("register", () => {
       })
     )
 
-    await expect(registerUser("example@email", "password50password50password50password50password50"))
+    await expect(registerUser("example@email", "password".repeat(8)))
     .rejects.toThrow("Password cannot exceed 50 characters");
   })
 
@@ -104,6 +104,21 @@ describe("register", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent("Passwords do not match");
     })
+  })
+  
+  test("shows error if password is less than 8 characters", async () => {
+    const user = userEvent.setup();
+
+    await router.load();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await user.type(screen.getByLabelText("Password"), "p");
+    expect(screen.getByText("Password must be at least 8 characters")).toBeInTheDocument();
   })
 
   test("redirects to login after successful registration", async () => {
