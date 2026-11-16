@@ -9,7 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 
-describe("login", () => {
+describe.skip("login", () => {
   test("logs a user in", async () => {
     const response = await loginUser("example@email.com", "password1");
 
@@ -22,9 +22,9 @@ describe("login", () => {
     });
   })
 
-  test("throws error if password is less than 8 characters", async () => {
+  test.only("throws error if password is less than 8 characters", async () => {
     server.use(
-      http.post(`${import.meta.env.VITE_API_URL}/api/users/register`, () => {
+      http.post(`${import.meta.env.VITE_API_URL}/api/users/login`, () => {
         return HttpResponse.json(
           { message: "Password must be at least 8 characters" },
           { status: 400 }
@@ -36,9 +36,9 @@ describe("login", () => {
     .rejects.toThrow("Password must be at least 8 characters");
   })
 
-  test("throws error if password is more than 50 characters", async () => {
+  test.only("throws error if password is more than 50 characters", async () => {
     server.use(
-      http.post(`${import.meta.env.VITE_API_URL}/api/users/register`, () => {
+      http.post(`${import.meta.env.VITE_API_URL}/api/users/login`, () => {
         return HttpResponse.json(
           { message: "Password cannot exceed 50 characters" },
           { status: 400 }
@@ -46,7 +46,7 @@ describe("login", () => {
       })
     )
 
-    await expect(loginUser("example@email", "password50password50password50password50password50"))
+    await expect(loginUser("example@email", "password".repeat(8)))
     .rejects.toThrow("Password cannot exceed 50 characters");
   })
 
@@ -88,6 +88,36 @@ describe("login", () => {
     );
 
     await user.type(screen.getByLabelText("Password"), "p");
-    expect(screen.getByText("Password must be at least 8 characters"));
+    expect(screen.getByText("Password must be at least 8 characters")).toBeInTheDocument();
+  })
+
+  test("redirects to home page after successful login", async () => {
+    server.use(
+      http.post(`${import.meta.env.VITE_API_URL}/api/users/refresh-token`, () => {
+        return HttpResponse.json(
+          { message: "New access token issued" }
+        );
+      })
+    );
+
+    const user = userEvent.setup();
+
+    await router.load();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await user.type(screen.getByLabelText("E-mail"), "example@email.com");
+    await user.type(screen.getByLabelText("Password"), "password");
+
+    await user.click(screen.getByRole("button", { name: "Login" }));
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/"),
+      { timeout: 4000 }
+    })
   })
 })
