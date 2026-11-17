@@ -15,5 +15,12 @@ export const handlers = [
       email: "example@email.com",
       userId: 1
     })
-  })
+  }),
+  
+  http.post(`${import.meta.env.VITE_API_URL}/api/users/refresh-token`, () => {
+    return HttpResponse.json(
+      { message: "New access token issued." },
+      { status: 200 }
+    );
+  }),
 ]
