@@ -4,28 +4,16 @@ import Sidebar from "../components/Sidebar";
 import { UserContext, type User } from "../contexts/userContext";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import { getUser, refreshAccessToken } from "../utils/user";
 
 export const Route = createRootRoute({ 
   component: RootLayout,
   loader: async () => {
     try {
-      const refreshRes = await fetch(`${import.meta.env.VITE_API_URL}/api/users/refresh-token`, 
-        { 
-          method: "POST", 
-          credentials: "include" 
-        }
-      );
-
-      if (!refreshRes.ok) {
-        return null;
-      }
-
-      const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
-        credentials: "include",
-      });
-
-      return userRes.ok ? userRes.json() : null;
+      await refreshAccessToken();
+      return await getUser();
     } catch (err) {
+      console.error(err);
       return null;
     }
   }
